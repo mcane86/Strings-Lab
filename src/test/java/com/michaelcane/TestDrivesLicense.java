@@ -1,29 +1,29 @@
 package com.michaelcane;
 
+import Tools.CompareUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
-
+import java.util.List;
 import static org.junit.Assert.*;
-
 
 public class TestDrivesLicense {
 
     DriversLicense testLicense;
 
-    String name = "Mike Jones";
-    String address = "123 Atl drive";
-    String eyeColor = "Brown";
-    Date expectedDOB = new Date(); // 3 times
-    Date expectedIssueDate = expectedDOB;
-    Date expectedExpirationDate = expectedDOB;
-    String licenseNum = "007";
-    String issuingState = "TX";
-    String trump = "Trump";
-    char male = 'M';
-    boolean federallyCompliantStatus = false;
-    char licenseClassification = 'C';
+    private String name = "Mike Jones";
+    private String address = "123 Atl drive";
+    private String eyeColor = "Brown";
+    private Date expectedDOB = new Date(); // 3 times
+    private Date expectedIssueDate = expectedDOB;
+    private Date expectedExpirationDate = expectedDOB;
+    private String licenseNum = "007";
+    private String issuingState = "TX";
+    private String trump = "Trump";
+    private char male = 'M';
+    private boolean federallyCompliantStatus = false;
+    private char licenseClassification = 'C';
 
     @Before
     public void setUp() throws Exception {
@@ -67,5 +67,12 @@ public class TestDrivesLicense {
         String actualHeader = DriversLicense.getCSVHeader();
 
         assertEquals(expectedHeader, actualHeader);
+    }
+
+    @Test
+    public void testDeserializeFromCSV() throws Exception {
+        List<DriversLicense> licenses = DriversLicense.deserializeFromCSV(DriversLicense.getCSVHeader() + testLicense.serializeToCSV());
+        DriversLicense deserializedTestLicense = licenses.get(0);
+        assertTrue(CompareUtils.compareCSV(deserializedTestLicense, testLicense));
     }
 }

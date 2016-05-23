@@ -1,6 +1,11 @@
 package com.michaelcane;
 
-import java.util.Date;
+import Tools.MyStringUtils;
+
+import java.util.*;
+import java.util.spi.CalendarNameProvider;
+
+import static Tools.MyStringUtils.*;
 
 public class DriversLicense {
 
@@ -11,8 +16,6 @@ public class DriversLicense {
     private char licenseClassification, sex;
     private boolean organDonor, federallyCompliant;
     private Date dateOfBirth, issueDate, expirationDate;
-
-    //private Restriction[] restrictions;
 
     public int getHeight() {
         return height;
@@ -86,14 +89,6 @@ public class DriversLicense {
         this.expirationDate = expirationDate;
     }
 
-//    public Restriction[] getRestrictions() {
-//        return restrictions;
-//    }
-//
-//    public void setRestrictions(Restriction[] restrictions) {
-//        this.restrictions = restrictions;
-//    }
-
     public String getName() {
         return name;
     }
@@ -150,7 +145,7 @@ public class DriversLicense {
 
         StringBuilder csvBuilder = new StringBuilder();
 
-        csvBuilder.append(name).append(',')
+        csvBuilder.append("\n").append(name).append(',')
                 .append(address).append(',')
                 .append(eyeColor).append(',')
                 .append(dateOfBirth).append(',')
@@ -167,7 +162,33 @@ public class DriversLicense {
     }
 
     public static String getCSVHeader(){
-        return "NAME,ADDRESS,EYE COLOR,DATE OF BIRTH,ISSUE DATE,EXPIRATION DATE," +
-                "LICENSE NUMBER,STATE,ENDORSEMENTS,SEX,FEDERAL COMPLIANCE,CLASSIFICATION";
+        return "NAME,ADDRESS,EYE COLOR,DATE OF BIRTH,ISSUE DATE,EXPIRATION DATE,LICENSE NUMBER,STATE,ENDORSEMENTS,SEX,FEDERAL COMPLIANCE,CLASSIFICATION";
+    }
+
+    public static List<DriversLicense> deserializeFromCSV(String content) throws Exception {
+        Scanner stringReader = new Scanner(content);
+        List<DriversLicense> licenses = new ArrayList<>();
+        stringReader.nextLine();
+
+        while(stringReader.hasNextLine()) {
+            String[] licenseEntries = stringReader.nextLine().split(",");
+            DriversLicense licenseBuilder = new DriversLicense();
+
+            licenseBuilder.setName(licenseEntries[0]);
+            licenseBuilder.setAddress(licenseEntries[1]);
+            licenseBuilder.setEyeColor(licenseEntries[2]);
+            licenseBuilder.setDateOfBirth(convertStringToDate(licenseEntries[3]));
+            licenseBuilder.setIssueDate(convertStringToDate(licenseEntries[4]));
+            licenseBuilder.setExpirationDate(convertStringToDate(licenseEntries[5]));
+            licenseBuilder.setLicenseNumber(licenseEntries[6]);
+            licenseBuilder.setIssuingState(licenseEntries[7]);
+            licenseBuilder.setEndorsements(licenseEntries[8]);
+            licenseBuilder.setSex(convertStringToChar(licenseEntries[9]));
+            licenseBuilder.setFederallyCompliant(convertStringToBoolean(licenseEntries[10]));
+            licenseBuilder.setLicenseClassification(convertStringToChar(licenseEntries[11]));
+
+            licenses.add(licenseBuilder);
+        }
+        return licenses;
     }
 }
