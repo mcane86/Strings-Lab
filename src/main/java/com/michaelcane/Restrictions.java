@@ -1,0 +1,5 @@
+package com.michaelcane;
+
+public enum Restrictions {
+    GLASSES, DUAL_MIRRORS, AUTOMATIC_TRANSMISSION, SPECIAL_EQUIPMENT, DAYTIME_DRIVING, VISUAL_IMPAIRMENT
+}
